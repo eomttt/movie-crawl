@@ -1,6 +1,5 @@
-// TODO: 총 좌석 수 줌
-
 const puppeteer = require('puppeteer');
+const chromium = require('chrome-aws-lambda');
 
 const CGV_HOST_URL = 'http://www.cgv.co.kr';
 const CGV_GET_BY_REGION = 'http://www.cgv.co.kr/theaters/';

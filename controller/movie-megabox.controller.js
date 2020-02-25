@@ -1,7 +1,5 @@
-const puppeteer = require('puppeteer');
-const axios = require('axios');
-const cheerio = require('cheerio');
-const client = require('cheerio-httpcli');
+// const puppeteer = require('puppeteer');
+const chromium = require('chrome-aws-lambda');
 
 const MEGA_HOST_URL = 'https://www.megabox.co.kr';
 const MEGA_GET_BY_REGION = 'https://www.megabox.co.kr/theater/list';
@@ -13,16 +11,14 @@ const MOCK_THEATER_INFO = {
 };
 
 const getRegions = async () => {
-    const browser = await puppeteer.launch({
-        headless: false
-    });
-    const page = await browser.newPage();
-
-    page.on('dialog', async dialog => {
-        await dialog.dismiss();
-    });
-
     try {
+        const browser = await chromium.puppeteer.launch({
+            args: chromium.args,
+            defaultViewport: chromium.defaultViewport,
+            executablePath: await chromium.executablePath,
+            headless: chromium.headless,
+          });
+        const page = await browser.newPage();
         await page.goto(MEGA_GET_BY_REGION);
         await page.waitFor(1000);
         const regions = await page.evaluate(() => {
@@ -31,7 +27,7 @@ const getRegions = async () => {
                 return element.innerText;
             });
         });
-
+        console.log('Regions', regions)
         return regions;
     } catch (error) {
         console.log('Get regions error MEGA', error);
@@ -74,19 +70,6 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
         console.log('Get theater by region error MEGA', error);
     } finally {
         browser.close();
-    }
-};
-
-const _getTimeTableTest = async (link) => {
-    try {
-        const html = await axios.get(`${MEGA_HOST_URL}${link}`);
-        const $ = cheerio.load(html.data);
-        const $list = $('.body-wrap').children('#schdlContainer').children('#contents').children('.inner-wrap').children('.tab-cont-wrap').children('#tab02');
-        console.log('###', $list.html());
-
-        return html.data;
-    } catch (error) {
-        console.log('Get Time Table test error', error);
     }
 };
 

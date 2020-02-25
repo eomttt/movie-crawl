@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const chromium = require('chrome-aws-lambda');
 
 const LOTTE_HOST_URL = 'https://www.lottecinema.co.kr/NLCHS';
 
