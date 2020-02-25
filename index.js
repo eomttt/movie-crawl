@@ -55,6 +55,3 @@ module.exports.getTimeTalbe = getTimeTalbe;
 module.exports.getBoxOffice = getBoxOffice;
 
 exports.handler = handler;
-
-
-

@@ -11,14 +11,14 @@ const MOCK_THEATER_INFO = {
 };
 
 const getRegions = async () => {
+    const browser = await chromium.puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: chromium.headless,
+    });
+    const page = await browser.newPage();
     try {
-        const browser = await chromium.puppeteer.launch({
-            args: chromium.args,
-            defaultViewport: chromium.defaultViewport,
-            executablePath: await chromium.executablePath,
-            headless: chromium.headless,
-          });
-        const page = await browser.newPage();
         await page.goto(MEGA_GET_BY_REGION);
         await page.waitFor(1000);
         const regions = await page.evaluate(() => {
