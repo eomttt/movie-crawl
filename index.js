@@ -40,9 +40,21 @@ const getBoxOffice = async () => {
 
 const handler = async (event) => {
   console.log('Event', event);
-  // TODO implement
+  let response = null;
+
+  const { request, theater } = event;
+
   try {
-    const response = await getRegion('megaBox');
+    if (request === 'region') {
+      response = await getRegion(theater);
+    } else if (request === 'theaters') {
+      response = await getTheatersByRegion(theater);
+    } else if (reqeust === 'timetable') {
+      response = await getTimeTalbe(theater);
+    } else if (request === 'box-office') {
+      response = await getBoxOffice(theater);
+    }
+
     return response;
   } catch (error) {
     console.log('Error' + error);
