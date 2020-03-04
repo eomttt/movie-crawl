@@ -39,23 +39,28 @@ const getBoxOffice = async () => {
 };
 
 const handler = async (event) => {
-  console.log('Event', event);
-  let response = null;
-
-  const { request, theater } = event;
+  let response = '';
+  
+  const { queryStringParameters } = event;
 
   try {
-    if (request === 'region') {
-      response = await getRegion(theater);
-    } else if (request === 'theaters') {
-      response = await getTheatersByRegion(theater);
-    } else if (reqeust === 'timetable') {
-      response = await getTimeTalbe(theater);
-    } else if (request === 'box-office') {
-      response = await getBoxOffice(theater);
+    if (queryStringParameters) {
+      const { request, theater } = queryStringParameters;
+      if (request === 'region') {
+        response = await getRegion(theater);
+      } else if (request === 'theaters') {
+        response = await getTheatersByRegion(theater);
+      } else if (reqeust === 'timetable') {
+        response = await getTimeTalbe(theater);
+      } else if (request === 'box-office') {
+        response = await getBoxOffice(theater);
+      }
     }
 
-    return response;
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response)
+    };
   } catch (error) {
     console.log('Error' + error);
   }
