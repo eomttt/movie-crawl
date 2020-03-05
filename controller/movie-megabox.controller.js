@@ -37,14 +37,13 @@ const getRegions = async () => {
 };
 
 const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
-    const browser = await puppeteer.launch({
-        headless: false
+    const browser = await chromium.puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: chromium.headless,
     });
     const page = await browser.newPage();
-
-    page.on('dialog', async dialog => {
-        await dialog.dismiss();
-    });
 
     try {
         await page.goto(MEGA_GET_BY_REGION);
@@ -74,32 +73,18 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
 };
 
 const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
-    console.log('GET TIME TABLE MEGA', link);
-    const browser = await puppeteer.launch({
-        headless: false,
-        // headless: true,
-        // networkIdleTimeout: 5000,
-        // args: [
-        //     '--no-sandbox',
-        //     '--disable-setuid-sandbox'
-        // ]
+    const browser = await chromium.puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: chromium.headless,
     });
-    const page = await browser.newPage();
-
-    await page.setDefaultNavigationTimeout(0)
-
-    page.on('dialog', async dialog => {
-        await dialog.dismiss();
-    });
+    const page = await browser.newPage();;
 
     try {
-        console.log('AAAAAA');
-        await page.goto(`${MEGA_HOST_URL}${link}`, {
-            waitUntil: 'domcontentloaded'
-        });
-
+        await page.goto(`${MEGA_HOST_URL}${link}`);
         await page.waitFor(1000);
-        console.log('BBBBB');
+
         const movieItems = await page.evaluate(() => {
             const items = Array.from(document.querySelectorAll('.body-wrap > #schdlContainer > #contents > .inner-wrap > .tab-cont-wrap > #tab02 > .reserve > .theater-list'));
             return items.map((item) => {
@@ -125,7 +110,6 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                 };
             });
         });
-        console.log("CCCC", movieItems);
 
         return movieItems.map((movieItem) => {
             return {

@@ -49,9 +49,11 @@ const handler = async (event) => {
       if (request === 'region') {
         response = await getRegion(theater);
       } else if (request === 'theaters') {
-        response = await getTheatersByRegion(theater);
+        const { regionIndex } = queryStringParameters;
+        response = await getTheatersByRegion(theater, Number(regionIndex));
       } else if (reqeust === 'timetable') {
-        response = await getTimeTalbe(theater);
+        const { theaterLink } = queryStringParameters;
+        response = await getTimeTalbe(theater, theaterLink);
       } else if (request === 'box-office') {
         response = await getBoxOffice(theater);
       }
@@ -66,7 +68,7 @@ const handler = async (event) => {
   }
 };
 
-const _test = () => {
+const _test = async () => {
   response = await getRegion('cgv');
   console.log('AAA', response);
 };
