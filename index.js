@@ -66,6 +66,13 @@ const handler = async (event) => {
   }
 };
 
+const _test = () => {
+  response = await getRegion('cgv');
+  console.log('AAA', response);
+};
+
+// _test();
+
 module.exports.getRegion = getRegion;
 module.exports.getTheatersByRegion = getTheatersByRegion;
 module.exports.getTimeTalbe = getTimeTalbe;
