@@ -108,7 +108,11 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
     const page = await browser.newPage();
 
     try {
-        await page.goto(`${CGV_HOST_URL}${timeTableUrl}`);
+        await page.goto(`${CGV_HOST_URL}${timeTableUrl}`, {
+            waitUntil: 'load',
+            // Remove the timeout
+            timeout: 0
+        });
         await page.waitFor(1000);
 
         const movieItems = await page.evaluate(() => {

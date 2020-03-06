@@ -26,7 +26,7 @@ const getTheatersByRegion = async (type, regionIndex) => {
     return result;
 };
 
-const getTimeTalbe = async (type, theaterLink) => {
+const getTimeTable = async (type, theaterLink) => {
     const result = await CONTROLLER[type].getTimeTable(theaterLink);
 
     return result;
@@ -46,16 +46,30 @@ const handler = async (event) => {
   try {
     if (queryStringParameters) {
       const { request, theater } = queryStringParameters;
-      if (request === 'region') {
-        response = await getRegion(theater);
-      } else if (request === 'theaters') {
-        const { regionIndex } = queryStringParameters;
-        response = await getTheatersByRegion(theater, Number(regionIndex));
-      } else if (reqeust === 'timetable') {
-        const { theaterLink } = queryStringParameters;
-        response = await getTimeTalbe(theater, theaterLink);
-      } else if (request === 'box-office') {
-        response = await getBoxOffice(theater);
+      switch(request) {
+        case 'region': {
+          response = await getRegion(theater);
+          break;
+        }
+        case 'theaters': {
+          const { regionIndex } = queryStringParameters;
+          response = await getTheatersByRegion(theater, Number(regionIndex));
+          break;
+        }
+        case 'timetable': {
+          const { theaterLink } = queryStringParameters;
+          response = await getTimeTable(theater, theaterLink);
+          break;
+        }
+        case 'box-office': {
+          response = await getBoxOffice(theater); 
+          break;
+        }
+        default: {
+          console.log('Please input correct request', request);
+          response = 'Please input correct request';
+          break;
+        }
       }
     }
 
@@ -69,15 +83,16 @@ const handler = async (event) => {
 };
 
 const _test = async () => {
-  response = await getRegion('cgv');
-  console.log('AAA', response);
+  const result = await handler({
+    queryStringParameters: {
+      request: 'timetable',
+      theater: 'lotte',
+      theaterLink: '가양'
+    }
+  });
+  console.log('AAA', result);
 };
 
 // _test();
-
-module.exports.getRegion = getRegion;
-module.exports.getTheatersByRegion = getTheatersByRegion;
-module.exports.getTimeTalbe = getTimeTalbe;
-module.exports.getBoxOffice = getBoxOffice;
 
 exports.handler = handler;
