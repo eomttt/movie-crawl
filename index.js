@@ -86,11 +86,11 @@ const _test = async () => {
   const result = await handler({
     queryStringParameters: {
       request: 'timetable',
-      theater: 'lotte',
-      theaterLink: '가양'
+      theater: 'cgv',
+      theaterLink: '/theaters/?theaterCode=0056'
     }
   });
-  console.log('AAA', result);
+  console.log('Result', result);
 };
 
 // _test();

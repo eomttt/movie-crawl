@@ -137,7 +137,6 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                 };
             });
         });
-
         return movieItems.map((movieItem) => {
             return {
                 title: movieItem.title,
