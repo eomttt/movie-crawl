@@ -1,4 +1,4 @@
-name: Deploy master branch
+name: Deploy to Lambda using serverless
 
 on:
   push:
