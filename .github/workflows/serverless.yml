@@ -28,3 +28,9 @@ jobs:
         # or if using AWS credentials directly
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        - name: Slack Notification
+    - uses: rtCamp/action-slack-notify@master
+      env:
+        SLACK_CHANNEL: project-deploy
+        SLACK_USERNAME: deploy-bot
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
