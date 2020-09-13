@@ -40,7 +40,6 @@ const getBoxOffice = async () => {
 
 const handler = async (event) => {
   let response = '';
-  console.log("Test")
   
   const { queryStringParameters } = event;
 
