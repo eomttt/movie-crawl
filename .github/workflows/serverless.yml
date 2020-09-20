@@ -34,3 +34,4 @@ jobs:
         SLACK_CHANNEL: project-deploy
         SLACK_USERNAME: deploy-bot
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_TITLE: 'MOVIE-CRAWLER Depoly DEV'
