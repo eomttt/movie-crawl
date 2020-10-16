@@ -164,7 +164,6 @@ const getTimeTableByNaver = async (theaterName) => {
 };
 
 const getBoxOffice = async (param) => {
-    console.log('그냥 찍어보자');
     console.log('controller: ', param);
     const browser = await chromium.puppeteer.launch({
         args: chromium.args,
