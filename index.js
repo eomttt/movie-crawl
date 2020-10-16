@@ -32,9 +32,9 @@ const getTimeTable = async (type, theaterLink) => {
     return result;
 };
 
-const getBoxOffice = async () => {
-    const result = await CONTROLLER[MOVIE_TYPE.CGV].getBoxOffice();
-
+const getBoxOffice = async (type, theaterLink) => {
+    const result = await CONTROLLER[type].getBoxOffice(theaterLink);
+  console.log(theaterLink);
     return result;
 };
 
@@ -46,6 +46,8 @@ const handler = async (event) => {
   try {
     if (queryStringParameters) {
       const { request, theater } = queryStringParameters;
+      console.log(theater);
+      console.log(request);
       switch(request) {
         case 'region': {
           response = await getRegion(theater);
@@ -58,11 +60,13 @@ const handler = async (event) => {
         }
         case 'timetable': {
           const { theaterLink } = queryStringParameters;
+          console.log(theaterLink);
           response = await getTimeTable(theater, theaterLink);
           break;
         }
         case 'box-office': {
-          response = await getBoxOffice(theater); 
+          const { theaterLink } = queryStringParameters;
+          response = await getBoxOffice(theater, theaterLink); 
           break;
         }
         default: {
@@ -85,14 +89,14 @@ const handler = async (event) => {
 const _test = async () => {
   const result = await handler({
     queryStringParameters: {
-      request: 'timetable',
-      theater: 'cgv',
-      theaterLink: '/theaters/?theaterCode=0056'
+      request: 'box-office',
+      theater: MOVIE_TYPE.LOTTE,
+      theaterLink: '/Cinema/Detail?divisionCode=1&detailDivisionCode=6&cinemaID=7002'
     }
   });
   console.log('Result', result);
 };
 
-// _test();
+_test();
 
 exports.handler = handler;
