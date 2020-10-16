@@ -4,9 +4,12 @@
 > yarn install --frozen-lockfile
 
 ## Test
-- > vi index.js
-- > // _test() => _test()
+- Open index.js
+- Find `_test()`
+- Delete command out 
+  > // _test() => _test()
 - > yarn start
+- Change `request, theater, theaterLink` in `_test` function and play!
 
 ## Movie crawling for use in AWS Lambda
 
