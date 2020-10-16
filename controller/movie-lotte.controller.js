@@ -174,7 +174,7 @@ const getBoxOffice = async (param) => {
     })
     const page = await browser.newPage();
     try {
-        console.log(`${LOTTE_HOST_URL}${param}`);
+        console.log(`${LOTTE_HOST_URL}${param}`); 
         await page.goto(`${LOTTE_HOST_URL}${param}`);
         await page.waitFor(1000);
 
