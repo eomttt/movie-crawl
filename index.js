@@ -32,10 +32,10 @@ const getTimeTable = async (type, theaterLink) => {
     return result;
 };
 
-const getBoxOffice = async (type, theaterLink) => {
-    const result = await CONTROLLER[type].getBoxOffice(theaterLink);
-  console.log(theaterLink);
-    return result;
+const getBoxOffice = async () => {
+  const result = await CONTROLLER[MOVIE_TYPE.CGV].getBoxOffice();
+
+  return result;
 };
 
 const handler = async (event) => {

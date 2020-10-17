@@ -163,34 +163,7 @@ const getTimeTableByNaver = async (theaterName) => {
       }
 };
 
-const getBoxOffice = async (param) => {
-    console.log('controller: ', param);
-    const browser = await chromium.puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath,
-        headless: chromium.headless,
-    })
-    const page = await browser.newPage();
-    try {
-        console.log(`${LOTTE_HOST_URL}${param}`); 
-        await page.goto(`${LOTTE_HOST_URL}${param}`);
-        await page.waitFor(1000);
-
-        const boxOffices = await page.evaluate(() => {
-            const elements = Array.from(document.querySelectorAll('.timeScroll > .list_tit'));
-            return elements.map((element) => {
-                return {
-                    image: element.querySelector('p') && element.querySelector('p').innerText,
-                    title: element.querySelector('.box-contents > a > .title') && element.querySelector('.box-contents > a > .title').innerText
-                };
-            });
-        });
-    } catch (error) {
-        console.log('Get theater by region error', error);
-    } finally {
-        browser.close();
-    }
+const getBoxOffice = () => {
 };
 
 module.exports.getRegions = getRegions;
