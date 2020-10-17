@@ -89,9 +89,9 @@ const handler = async (event) => {
 const _test = async () => {
   const result = await handler({
     queryStringParameters: {
-      request: 'box-office',
-      theater: MOVIE_TYPE.LOTTE,
-      theaterLink: '/Cinema/Detail?divisionCode=1&detailDivisionCode=6&cinemaID=7002'
+      request: 'timetable',
+      theater: 'cgv',
+      theaterLink: '/theaters/?theaterCode=0056'
     }
   });
   console.log('Result', result);
