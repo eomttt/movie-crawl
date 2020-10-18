@@ -10,6 +10,7 @@ const MOCK_THEATER_INFO = {
     title: 'CGV강릉',
     link: '/theaters/?areacode=12&theaterCode=0139&date=20200202'
 };
+const CGV_GET_MOVIE_IMAGE = 'http://img.cgv.co.kr/Movie/Thumbnail/Poster/000083/';
 
 const getRegions = async () => {
     const browser = await chromium.puppeteer.launch({
@@ -98,6 +99,7 @@ const getTimeTableUrl = async (link = MOCK_THEATER_INFO.link) => {
 
 const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
     const timeTableUrl = await getTimeTableUrl(link);
+    const imageUrl = `${CGV_GET_MOVIE_IMAGE}`;
 
     const browser = await chromium.puppeteer.launch({
       args: chromium.args,
@@ -131,9 +133,12 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                         };
                     });
                 });
+                const imageHref = item.querySelector('.info-movie > a').getAttribute('href');
+                const imageNumber = imageHref.substring(imageHref.lastIndexOf('=')+1);
                 return {
                     title,
-                    timeInfo
+                    timeInfo,
+                    imageNumber
                 };
             });
         });
@@ -142,9 +147,10 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                 title: movieItem.title,
                 timeInfo: movieItem.timeInfo.reduce((acc, cur) => {
                     return [...acc, ...cur];
-                }, [])
+                }, []),
+                images: `${imageUrl}${movieItem.imageNumber}/${movieItem.imageNumber}_1000.jpg`
             };
-        });
+        }, imageUrl);
     } catch (error) {
         console.log('Get time table error', error);
     } finally {
