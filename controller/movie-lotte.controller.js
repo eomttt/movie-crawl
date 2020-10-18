@@ -13,10 +13,10 @@ const NAVER_LINK = 'https://search.naver.com/search.naver?';
 
 const getRegions = async () => {
     const browser = await chromium.puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: chromium.headless,
     });
     const page = await browser.newPage();
 
@@ -40,10 +40,10 @@ const getRegions = async () => {
 
 const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
     const browser = await chromium.puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: chromium.headless,
     });
     const page = await browser.newPage();
 
@@ -65,7 +65,6 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
                 };
             });
         });
-
         return theatersInfo;
     } catch (error) {
         console.log('Get theater by region error Lotte', error);
@@ -121,46 +120,85 @@ const getTimeTable = async (theaterName = MOCK_THEATER_INFO.title) => {
     // }
 };
 
+// const getNaverMovieImage = async (imageNumber) => {
+//     const NAVER_MOVIE = 'https://movie.naver.com/movie/bi/mi/basic.nhn?';//code=174082'
+//     const browser = await chromium.puppeteer.launch({
+//         args: chromium.args,
+//         defaultViewport: chromium.defaultViewport,
+//         executablePath: await chromium.executablePath,
+//         headless: chromium.headless,
+//     });;
+//     const page = await browser.newPage();
+
+//     try {
+//         console.log('naver 영화 : ', `${NAVER_MOVIE}${imageNumber}`);
+//         await page.goto(`${NAVER_MOVIE}${imageNumber}`);
+//         await page.waitFor(5000);
+
+//         const imageUrl = await page.evaluate(() => {
+//             const items = Array.from(document.querySelectorAll('.mv_info_area > .poster > a'));
+//             console.log('items를 찍어보자, ', items);
+//             return items.map((item) => {
+//                 console.log('item: ', item);
+//             });
+//         });
+//         return imageUrl;
+//     } catch (error) {
+//         console.log('Get Naver Movie Image error LOTTE', error);
+//     } finally {
+//         browser.close();
+//     }
+// };
+
 const getTimeTableByNaver = async (theaterName) => {
     const browser = await chromium.puppeteer.launch({
         args: [...chromium.args],
         defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath,
         headless: chromium.headless,
-      });;
-      const page = await browser.newPage();
-  
-      try {
-          await page.goto(`${NAVER_LINK}query=${encodeURI(`롯데시네마+${theaterName}`)}`, {
-              waitUntil: 'load',
-              // Remove the timeout
-              timeout: 0
-          });
-          await page.waitFor(1000);
-  
-          const movieItems = await page.evaluate(() => {
-              const items = Array.from(document.querySelectorAll('#main_pack > .content_search > .contents03 > .contents03_sub > .cs_movie_house > ._wrap_single_type > .movie_content > .scrn_list > .list_tbl_box > .list_tbl > ._wrap_time_table > tr'));
-              return items.map((item) => {
-                  const title = item.querySelector('th > a').innerText;
-                  const timeTables = Array.from(item.querySelectorAll('td > div > .time_info > a'));
-                  const timeInfo = timeTables.map((timeTable) => {
-                      return {
-                          time: timeTable.innerText,
-                      };
-                  });
-                  return {
-                      title,
-                      timeInfo
-                  };
-              });
-          });
+    });;
+    const page = await browser.newPage();
 
-          return movieItems;
-      } catch (error) {
-          console.log('Get theater timetable error LOTTE', error);
-      } finally {
-          browser.close();
-      }
+    try {
+        console.log(`${NAVER_LINK}query=${encodeURI(`롯데시네마+${theaterName}`)}`);
+        await page.goto(`${NAVER_LINK}query=${encodeURI(`롯데시네마+${theaterName}`)}`, {
+            waitUntil: 'load',
+            // Remove the timeout
+            timeout: 0
+        });
+        await page.waitFor(1000);
+
+        const movieItems = await page.evaluate(() => {
+            const items = Array.from(document.querySelectorAll('#main_pack > .content_search > .contents03 > .contents03_sub > .cs_movie_house > ._wrap_single_type > .movie_content > .scrn_list > .list_tbl_box > .list_tbl > ._wrap_time_table > tr'));
+            return items.map((item) => {
+                const title = item.querySelector('th > a').innerText;
+                const imageHref = item.querySelector('th > a').getAttribute('href');
+                const imageNumber = imageHref.substring(imageHref.lastIndexOf('=') + 1);
+                const timeTables = Array.from(item.querySelectorAll('td > div > .time_info > a'));
+                const timeInfo = timeTables.map((timeTable) => {
+                    return {
+                        time: timeTable.innerText,
+                    };
+                });
+                return {
+                    title,
+                    imageNumber,
+                    timeInfo
+                };
+            });
+        });
+        return movieItems.map((movieItem) => {
+            return {
+                title: movieItem.title,
+                timeInfo: movieItem.timeInfo,
+                images: `https://movie.naver.com/movie/bi/mi/photoViewPopup.nhn?movieCode=${movieItem.imageNumber}`
+            };
+        });
+    } catch (error) {
+        console.log('Get theater timetable error LOTTE', error);
+    } finally {
+        browser.close();
+    }
 };
 
 const getBoxOffice = () => {
