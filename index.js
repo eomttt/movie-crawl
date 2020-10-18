@@ -90,8 +90,8 @@ const _test = async () => {
   const result = await handler({
     queryStringParameters: {
       request: 'timetable',
-      theater: 'cgv',
-      theaterLink: '/theaters/?theaterCode=0056'
+      theater: 'lotte',
+      theaterLink: '동해'//'/theaters/?theaterCode=0056'
     }
   });
   console.log('Result', result);
