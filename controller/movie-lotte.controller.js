@@ -174,6 +174,7 @@ const getTimeTableByNaver = async (theaterName) => {
                 const title = item.querySelector('th > a').innerText;
                 const imageHref = item.querySelector('th > a').getAttribute('href');
                 const imageNumber = imageHref.substring(imageHref.lastIndexOf('=') + 1);
+                
                 const timeTables = Array.from(item.querySelectorAll('td > div > .time_info > a'));
                 const timeInfo = timeTables.map((timeTable) => {
                     return {
@@ -182,18 +183,12 @@ const getTimeTableByNaver = async (theaterName) => {
                 });
                 return {
                     title,
-                    imageNumber,
+                    imageUrl: `https://movie.naver.com/movie/bi/mi/photoViewPopup.nhn?movieCode=${imageNumber}`,
                     timeInfo
                 };
             });
         });
-        return movieItems.map((movieItem) => {
-            return {
-                title: movieItem.title,
-                timeInfo: movieItem.timeInfo,
-                images: `https://movie.naver.com/movie/bi/mi/photoViewPopup.nhn?movieCode=${movieItem.imageNumber}`
-            };
-        });
+        return movieItems;
     } catch (error) {
         console.log('Get theater timetable error LOTTE', error);
     } finally {
