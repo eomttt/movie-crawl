@@ -66,7 +66,7 @@ const handler = async (event) => {
         }
         case 'box-office': {
           const { theaterLink } = queryStringParameters;
-          response = await getBoxOffice(theater, theaterLink); 
+          response = await getBoxOffice(theater); 
           break;
         }
         default: {
@@ -90,8 +90,8 @@ const _test = async () => {
   const result = await handler({
     queryStringParameters: {
       request: 'timetable',
-      theater: 'lotte',
-      theaterLink: '동해'//'/theaters/?theaterCode=0056'
+      theater: 'megaBox',
+      // theaterLink: ''//'/theaters/?theaterCode=0056'
     }
   });
   console.log('Result', result);

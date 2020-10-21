@@ -72,6 +72,36 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
     }
 };
 
+const getImageUrl = async (link) => {
+    const browser = await chromium.puppeteer.launch({
+        args: [...chromium.args],
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: chromium.headless,
+    });
+    const MEGA_BOX_IMAGE_URL = `https://www.megabox.co.kr${link}`;
+    const page = await browser.newPage();;
+    console.log('link : ', `${MEGA_BOX_IMAGE_URL}`);
+    try {
+        await page.goto(`${MEGA_BOX_IMAGE_URL}`, {
+            waitUntil: 'load',
+            // Remove the timeout
+            timeout: 0
+        });
+        await page.waitFor(1000);
+        const imageUrl = await page.evaluate(() => {
+            return document.querySelector('#schdlContainer > #contents > .movie-detail-page > .movie-detail-cont > .poster > .wrap > img').getAttribute('src');
+        });
+        console.log('imageUrl : ', imageUrl);
+        return imageUrl;
+
+    } catch (error) {
+        console.log('Get image URL error MEGA', error);
+    } finally {
+        browser.close();
+    }
+}
+
 const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
     const browser = await chromium.puppeteer.launch({
         args: chromium.args,
@@ -80,7 +110,6 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
         headless: chromium.headless,
     });
     const page = await browser.newPage();;
-
     try {
         await page.goto(`${MEGA_HOST_URL}${link}`, {
             waitUntil: 'load',
@@ -92,6 +121,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
         const movieItems = await page.evaluate(() => {
             const items = Array.from(document.querySelectorAll('.body-wrap > #schdlContainer > #contents > .inner-wrap > .tab-cont-wrap > #tab02 > .reserve > .theater-list'));
             return items.map((item) => {
+                const imageNumber = item.querySelector('.theater-tit > p:nth-child(2) > a').getAttribute('href');
                 const title = item.querySelector('.theater-tit > p:nth-child(2)').innerText;
                 const timeTables = Array.from(item.querySelectorAll('.theater-type-box'));
                 const timeInfo = timeTables.map((timeTable) => {
@@ -110,7 +140,8 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
 
                 return {
                     title,
-                    timeInfo
+                    timeInfo,
+                    imageNumber
                 };
             });
         });
@@ -120,9 +151,10 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                 title: movieItem.title,
                 timeInfo: movieItem.timeInfo.reduce((acc, cur) => {
                     return [...acc, ...cur];
-                }, [])
+                }, []),
+                imageUrl: getImageUrl(movieItem.imageNumber)
             };
-        });
+        })
     } catch (error) {
         console.log('Get theater timetable error MEGA', error);
     } finally {
