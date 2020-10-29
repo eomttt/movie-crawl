@@ -99,7 +99,6 @@ const getTimeTableUrl = async (link = MOCK_THEATER_INFO.link) => {
 
 const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
     const timeTableUrl = await getTimeTableUrl(link);
-    const imageUrl = `${CGV_GET_MOVIE_IMAGE}`;
 
     const browser = await chromium.puppeteer.launch({
       args: chromium.args,
@@ -118,7 +117,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
         await page.waitFor(1000);
 
         const movieItems = await page.evaluate(() => {
-            const items = Array.from(document.querySelectorAll('.showtimes-wrap > .sect-showtimes > ul > li > .col-times'));
+            const items = Array.from(document.querySelectorAll('li > .col-times'));
             return items.map((item) => {
                 const title = item.querySelector('.info-movie > a > strong').innerText;
                 const timeTables = Array.from(item.querySelectorAll('.type-hall'));
@@ -134,7 +133,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                     });
                 });
                 const imageHref = item.querySelector('.info-movie > a').getAttribute('href');
-                const imageNumber = imageHref.substring(imageHref.lastIndexOf('=')+1);
+                const imageNumber = imageHref.split('=')[1];
                 return {
                     title,
                     timeInfo,
@@ -148,9 +147,9 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                 timeInfo: movieItem.timeInfo.reduce((acc, cur) => {
                     return [...acc, ...cur];
                 }, []),
-                images: `${imageUrl}${movieItem.imageNumber}/${movieItem.imageNumber}_1000.jpg`
+                images: `${CGV_GET_MOVIE_IMAGE}${movieItem.imageNumber}/${movieItem.imageNumber}_1000.jpg`
             };
-        }, imageUrl);
+        });
     } catch (error) {
         console.log('Get time table error', error);
     } finally {
