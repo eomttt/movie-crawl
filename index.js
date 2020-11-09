@@ -33,9 +33,9 @@ const getTimeTable = async (type, theaterLink) => {
 };
 
 const getBoxOffice = async () => {
-    const result = await CONTROLLER[MOVIE_TYPE.CGV].getBoxOffice();
+  const result = await CONTROLLER[MOVIE_TYPE.CGV].getBoxOffice();
 
-    return result;
+  return result;
 };
 
 const handler = async (event) => {
@@ -46,6 +46,8 @@ const handler = async (event) => {
   try {
     if (queryStringParameters) {
       const { request, theater } = queryStringParameters;
+      console.log(theater);
+      console.log(request);
       switch(request) {
         case 'region': {
           response = await getRegion(theater);
@@ -58,10 +60,12 @@ const handler = async (event) => {
         }
         case 'timetable': {
           const { theaterLink } = queryStringParameters;
+          console.log(theaterLink);
           response = await getTimeTable(theater, theaterLink);
           break;
         }
         case 'box-office': {
+          const { theaterLink } = queryStringParameters;
           response = await getBoxOffice(theater); 
           break;
         }
@@ -86,13 +90,13 @@ const _test = async () => {
   const result = await handler({
     queryStringParameters: {
       request: 'timetable',
-      theater: 'cgv',
-      theaterLink: '/theaters/?theaterCode=0056'
+      theater: 'megaBox',
+      theaterLink: '/theater/time?brchNo=1372'
     }
   });
   console.log('Result', result);
 };
 
-// _test();
+_test();
 
 exports.handler = handler;

@@ -10,6 +10,7 @@ const MOCK_THEATER_INFO = {
     title: 'CGV강릉',
     link: '/theaters/?areacode=12&theaterCode=0139&date=20200202'
 };
+const CGV_GET_MOVIE_IMAGE = 'http://img.cgv.co.kr/Movie/Thumbnail/Poster/000083/';
 
 const getRegions = async () => {
     const browser = await chromium.puppeteer.launch({
@@ -116,7 +117,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
         await page.waitFor(1000);
 
         const movieItems = await page.evaluate(() => {
-            const items = Array.from(document.querySelectorAll('.showtimes-wrap > .sect-showtimes > ul > li > .col-times'));
+            const items = Array.from(document.querySelectorAll('li > .col-times'));
             return items.map((item) => {
                 const title = item.querySelector('.info-movie > a > strong').innerText;
                 const timeTables = Array.from(item.querySelectorAll('.type-hall'));
@@ -131,9 +132,12 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                         };
                     });
                 });
+                const imageHref = item.querySelector('.info-movie > a').getAttribute('href');
+                const imageNumber = imageHref.split('=')[1];
                 return {
                     title,
-                    timeInfo
+                    timeInfo,
+                    imageNumber
                 };
             });
         });
@@ -142,7 +146,8 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                 title: movieItem.title,
                 timeInfo: movieItem.timeInfo.reduce((acc, cur) => {
                     return [...acc, ...cur];
-                }, [])
+                }, []),
+                images: `${CGV_GET_MOVIE_IMAGE}${movieItem.imageNumber}/${movieItem.imageNumber}_1000.jpg`
             };
         });
     } catch (error) {
