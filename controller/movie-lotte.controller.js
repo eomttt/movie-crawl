@@ -169,11 +169,11 @@ const getTimeTableByNaver = async (theaterName) => {
         await page.waitFor(1000);
 
         const movieItems = await page.evaluate(() => {
-            const items = Array.from(document.querySelectorAll('#main_pack > .content_search > .contents03 > .contents03_sub > .cs_movie_house > ._wrap_single_type > .movie_content > .scrn_list > .list_tbl_box > .list_tbl > ._wrap_time_table > tr'));
+            const items = Array.from(document.querySelectorAll('.list_tbl_box > .list_tbl > ._wrap_time_table > tr'));
             return items.map((item) => {
                 const title = item.querySelector('th > a').innerText;
                 const imageHref = item.querySelector('th > a').getAttribute('href');
-                const imageNumber = imageHref.substring(imageHref.lastIndexOf('=') + 1);
+                const imageNumber = imageHref.split('=')[1];
                 
                 const timeTables = Array.from(item.querySelectorAll('td > div > .time_info > a'));
                 const timeInfo = timeTables.map((timeTable) => {

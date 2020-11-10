@@ -119,7 +119,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
         await page.waitFor(1000);
 
         const movieItems = await page.evaluate(() => {
-            const items = Array.from(document.querySelectorAll('.body-wrap > #schdlContainer > #contents > .inner-wrap > .tab-cont-wrap > #tab02 > .reserve > .theater-list'));
+            const items = Array.from(document.querySelectorAll('.reserve > .theater-list'));
             return items.map((item) => {
                 const imageNumber = item.querySelector('.theater-tit > p:nth-child(2) > a').getAttribute('href');
                 const title = item.querySelector('.theater-tit > p:nth-child(2)').innerText;
@@ -152,7 +152,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                 timeInfo: movieItem.timeInfo.reduce((acc, cur) => {
                     return [...acc, ...cur];
                 }, []),
-                imageUrl: getImageUrl(movieItem.imageNumber)
+                // imageUrl: getImageUrl(movieItem.imageNumber)
             };
         })
     } catch (error) {
