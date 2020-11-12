@@ -113,7 +113,7 @@ const getImageUrl = async (imageNumber) => {
                 console.log(`${imagesvrUrl}${movieFilePath}`);
                 return `${imagesvrUrl}${movieFilePath}`;
             }
-    }, setTimeout(()=>1000));
+    });
 }
 
 const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
@@ -167,7 +167,6 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                     final = x;
                 }
             })
-            setTimeout(()=>10000);
             return {
                 title: movieItem.title,
                 timeInfo: movieItem.timeInfo.reduce((acc, cur) => {
