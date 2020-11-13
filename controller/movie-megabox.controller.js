@@ -104,16 +104,15 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
 // }
 
 const getImageUrl = async (imageNumber) => {
+    console.log(imageNumber);
 	const response = await fetch(`https://www.megabox.co.kr/on/oh/oha/Movie/selectOneLnList.do?currentPage=1&movieNo=${imageNumber}`);
-    const res = await response.json().then(
-        data => {
-            if (!!data && !!data.list && !!data.list[0] && !!data.list[0].movieFilePath) {
-                const imagesvrUrl = data.imgSvrUrl;
-                const movieFilePath = !!data.list[0].movieFilePath ? data.list[0].movieFilePath : '';
-                console.log(`${imagesvrUrl}${movieFilePath}`);
-                return `${imagesvrUrl}${movieFilePath}`;
-            }
-    });
+    const data = await response.json();
+    if (!!data && !!data.list && !!data.list[0] && !!data.list[0].movieFilePath) {
+        const imagesvrUrl = data.imgSvrUrl;
+        const movieFilePath = !!data.list[0].movieFilePath ? data.list[0].movieFilePath : '';
+        console.log(`${imagesvrUrl}${movieFilePath}`);
+        return `${imagesvrUrl}${movieFilePath}`;
+    }
 }
 
 const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
@@ -160,22 +159,19 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                 };
             });
         });
-        return movieItems.map((movieItem) => {
-            let final = '';
-            getImageUrl(movieItem.imageNumber).then(x=>{
-                if (!!x) {
-                    final = x;
-                }
-            })
-            return {
+        let timeTableData = [];
+        for (movieItem of movieItems) {
+            console.log(movieItem.imageNumber);
+            const item = {
                 title: movieItem.title,
                 timeInfo: movieItem.timeInfo.reduce((acc, cur) => {
                     return [...acc, ...cur];
                 }, []),
-                imageUrl: final
-            };
-        })
-        
+                imageUrl: await getImageUrl(movieItem.imageNumber)
+            }
+            timeTableData.push(item);
+        }
+        return timeTableData;
     } catch (error) {
         console.log('Get theater timetable error MEGA', error);
     } finally {
