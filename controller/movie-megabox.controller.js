@@ -73,38 +73,7 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
     }
 };
 
-// const getImageUrl = async (link) => {
-//     const browser = await chromium.puppeteer.launch({
-//         args: [...chromium.args],
-//         defaultViewport: chromium.defaultViewport,
-//         executablePath: await chromium.executablePath,
-//         headless: chromium.headless,
-//     });
-//     const MEGA_BOX_IMAGE_URL = `https://www.megabox.co.kr${link}`;
-//     const page = await browser.newPage();;
-//     console.log('link : ', `${MEGA_BOX_IMAGE_URL}`);
-//     try {
-//         await page.goto(`${MEGA_BOX_IMAGE_URL}`, {
-//             waitUntil: 'load',
-//             // Remove the timeout
-//             timeout: 0
-//         });
-//         await page.waitFor(1000);
-//         const imageUrl = await page.evaluate(() => {
-//             return document.querySelector('#schdlContainer > #contents > .movie-detail-page > .movie-detail-cont > .poster > .wrap > img').getAttribute('src');
-//         });
-//         console.log('imageUrl : ', imageUrl);
-//         return imageUrl;
-
-//     } catch (error) {
-//         console.log('Get image URL error MEGA', error);
-//     } finally {
-//         browser.close();
-//     }
-// }
-
 const getImageUrl = async (imageNumber) => {
-    console.log(imageNumber);
 	const response = await fetch(`https://www.megabox.co.kr/on/oh/oha/Movie/selectOneLnList.do?currentPage=1&movieNo=${imageNumber}`);
     const data = await response.json();
     if (!!data && !!data.list && !!data.list[0] && !!data.list[0].movieFilePath) {
@@ -124,7 +93,6 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
     });
     const page = await browser.newPage();;
     try {
-        console.log(`${MEGA_HOST_URL}${link}`);
         await page.goto(`${MEGA_HOST_URL}${link}`, {
             waitUntil: 'load',
             // Remove the timeout
@@ -161,7 +129,6 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
         });
         let timeTableData = [];
         for (movieItem of movieItems) {
-            console.log(movieItem.imageNumber);
             const item = {
                 title: movieItem.title,
                 timeInfo: movieItem.timeInfo.reduce((acc, cur) => {
