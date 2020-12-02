@@ -120,36 +120,6 @@ const getTimeTable = async (theaterName = MOCK_THEATER_INFO.title) => {
     // }
 };
 
-// const getNaverMovieImage = async (imageNumber) => {
-//     const NAVER_MOVIE = 'https://movie.naver.com/movie/bi/mi/basic.nhn?';//code=174082'
-//     const browser = await chromium.puppeteer.launch({
-//         args: chromium.args,
-//         defaultViewport: chromium.defaultViewport,
-//         executablePath: await chromium.executablePath,
-//         headless: chromium.headless,
-//     });;
-//     const page = await browser.newPage();
-
-//     try {
-//         console.log('naver 영화 : ', `${NAVER_MOVIE}${imageNumber}`);
-//         await page.goto(`${NAVER_MOVIE}${imageNumber}`);
-//         await page.waitFor(5000);
-
-//         const imageUrl = await page.evaluate(() => {
-//             const items = Array.from(document.querySelectorAll('.mv_info_area > .poster > a'));
-//             console.log('items를 찍어보자, ', items);
-//             return items.map((item) => {
-//                 console.log('item: ', item);
-//             });
-//         });
-//         return imageUrl;
-//     } catch (error) {
-//         console.log('Get Naver Movie Image error LOTTE', error);
-//     } finally {
-//         browser.close();
-//     }
-// };
-
 const getTimeTableByNaver = async (theaterName) => {
     const browser = await chromium.puppeteer.launch({
         args: [...chromium.args],
@@ -160,7 +130,6 @@ const getTimeTableByNaver = async (theaterName) => {
     const page = await browser.newPage();
 
     try {
-        console.log(`${NAVER_LINK}query=${encodeURI(`롯데시네마+${theaterName}`)}`);
         await page.goto(`${NAVER_LINK}query=${encodeURI(`롯데시네마+${theaterName}`)}`, {
             waitUntil: 'load',
             // Remove the timeout

@@ -78,8 +78,7 @@ const getImageUrl = async (imageNumber) => {
     const data = await response.json();
     if (!!data && !!data.list && !!data.list[0] && !!data.list[0].movieFilePath) {
         const imagesvrUrl = data.imgSvrUrl;
-        const movieFilePath = !!data.list[0].movieFilePath ? data.list[0].movieFilePath : '';
-        console.log(`${imagesvrUrl}${movieFilePath}`);
+        const movieFilePath = data.list[0].movieFilePath || '';
         return `${imagesvrUrl}${movieFilePath}`;
     }
 }
