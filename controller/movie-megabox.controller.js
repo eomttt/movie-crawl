@@ -76,7 +76,7 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
 const getImageUrl = async (imageNumber) => {
 	const response = await fetch(`https://www.megabox.co.kr/on/oh/oha/Movie/selectOneLnList.do?currentPage=1&movieNo=${imageNumber}`);
     const data = await response.json();
-    if (!!data && !!data.list && !!data.list[0] && !!data.list[0].movieFilePath) {
+    if (data?.list?.[0]?.movieFilePath) {
         const imagesvrUrl = data.imgSvrUrl;
         const movieFilePath = data.list[0].movieFilePath || '';
         return `${imagesvrUrl}${movieFilePath}`;
