@@ -1,14 +1,14 @@
 # movie-crawl
 
 ## Installation
-> yarn install --frozen-lockfile
+> npm install --frozen-lockfile
 
 ## Test
 - Open index.js
 - Find `_test()`
 - Delete command out 
   > // _test() => _test()
-- > yarn start
+- > npm start
 - Change `request, theater, theaterLink` in `_test` function and play!
 
 ### TimeTable test 인 경우

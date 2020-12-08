@@ -3,9 +3,9 @@
 echo "Start for build"
 
 rmPreviousZip="rm -rf build.zip"
-buildProd="yarn prune --production"
+buildProd="npm prune --production"
 makeZip="zip -r build.zip ./*"
-buildDev="yarn install"
+buildDev="npm install"
 
 $rmPreviousZip
 $buildProd
