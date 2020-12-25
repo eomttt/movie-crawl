@@ -99,7 +99,6 @@ const getTimeTableUrl = async (link = MOCK_THEATER_INFO.link) => {
 
 const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
     const timeTableUrl = await getTimeTableUrl(link);
-    const imageUrl = `${CGV_GET_MOVIE_IMAGE}`;
 
     const browser = await chromium.puppeteer.launch({
       args: chromium.args,
@@ -150,7 +149,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                 }, []),
                 image: `${CGV_GET_MOVIE_IMAGE}${movieItem.imageNumber}/${movieItem.imageNumber}_1000.jpg`
             };
-        }, imageUrl);
+        });
     } catch (error) {
         console.log('Get time table error', error);
     } finally {

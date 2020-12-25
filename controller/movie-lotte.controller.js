@@ -152,7 +152,7 @@ const getTimeTableByNaver = async (theaterName) => {
                 });
                 return {
                     title,
-                    imageUrl: `https://movie.naver.com/movie/bi/mi/photoViewPopup.nhn?movieCode=${imageNumber}`,
+                    image: `https://movie.naver.com/movie/bi/mi/photoViewPopup.nhn?movieCode=${imageNumber}`,
                     timeInfo
                 };
             });

@@ -73,7 +73,7 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
     }
 };
 
-const getImageUrl = async (imageNumber) => {
+const getImage = async (imageNumber) => {
 	const response = await fetch(`https://www.megabox.co.kr/on/oh/oha/Movie/selectOneLnList.do?currentPage=1&movieNo=${imageNumber}`);
     const data = await response.json();
     // TODO: Node 14 부터 optional chaining 적용 됨.
@@ -136,7 +136,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                 timeInfo: movieItem.timeInfo.reduce((acc, cur) => {
                     return [...acc, ...cur];
                 }, []),
-                imageUrl: await getImageUrl(movieItem.imageNumber)
+                image: await getImage(movieItem.imageNumber)
             }
             timeTableData.push(item);
         }
