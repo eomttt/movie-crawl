@@ -148,7 +148,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
                 timeInfo: movieItem.timeInfo.reduce((acc, cur) => {
                     return [...acc, ...cur];
                 }, []),
-                images: `${CGV_GET_MOVIE_IMAGE}${movieItem.imageNumber}/${movieItem.imageNumber}_1000.jpg`
+                image: `${CGV_GET_MOVIE_IMAGE}${movieItem.imageNumber}/${movieItem.imageNumber}_1000.jpg`
             };
         }, imageUrl);
     } catch (error) {
