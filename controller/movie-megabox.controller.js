@@ -82,7 +82,7 @@ const getImage = async (imageNumber) => {
 
     if (data) {
         const { imgSvrUrl, list } = data;
-        if (list && list[0].movieFilePath) {
+        if (list && list[0] && list[0].movieFilePath) {
             let path = list[0].movieFilePath;
             list.some((item) => {
                 if (item.movieFilePath) {

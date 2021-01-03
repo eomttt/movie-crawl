@@ -92,7 +92,7 @@ const _test = async () => {
     queryStringParameters: {
       request: 'timetable',
       theater: 'megaBox',
-      theaterLink: '/theater/time?brchNo=1372'
+      theaterLink: '/theater/time?brchNo=1371'
     }
   });
   console.log('Result', result);
