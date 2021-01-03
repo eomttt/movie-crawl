@@ -76,14 +76,26 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
 const getImage = async (imageNumber) => {
 	const response = await fetch(`https://www.megabox.co.kr/on/oh/oha/Movie/selectOneLnList.do?currentPage=1&movieNo=${imageNumber}`);
     const data = await response.json();
+    console.log("CCCC", data)
     // TODO: Node 14 부터 optional chaining 적용 됨.
     // Lambda 는 12 까지만 지원함 ㅠㅠ 고로 못씀...
     // https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Optional_chaining
-    if (!!data && !!data.list && !!data.list[0] && !!data.list[0].movieFilePath) {
-        const imagesvrUrl = data.imgSvrUrl;
-        const movieFilePath = data.list[0].movieFilePath || '';
-        return `${imagesvrUrl}${movieFilePath}`;
+
+    if (data) {
+        const { imgSvrUrl, list } = data;
+        if (list) {
+            let path = list[0].movieFilePath;
+            list.some((item) => {
+                if (item.movieFilePath) {
+                    path = item.movieFilePath;
+                    return true;
+                }
+                return false;
+            })
+            return `${imgSvrUrl}${path}`;
+        }
     }
+    return '';
 }
 
 const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {

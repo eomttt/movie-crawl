@@ -91,8 +91,8 @@ const _test = async () => {
   const result = await handler({
     queryStringParameters: {
       request: 'timetable',
-      theater: 'cgv',
-      theaterLink: '/theaters/?theaterCode=0056'
+      theater: 'megaBox',
+      theaterLink: '/theater/time?brchNo=1372'
     }
   });
   console.log('Result', result);
