@@ -10,7 +10,7 @@ const MOCK_THEATER_INFO = {
     title: 'CGV강릉',
     link: '/theaters/?areacode=12&theaterCode=0139&date=20200202'
 };
-const CGV_GET_MOVIE_IMAGE = 'http://img.cgv.co.kr/Movie/Thumbnail/Poster/000083/';
+const CGV_GET_MOVIE_IMAGE = 'http://img.cgv.co.kr/Movie/Thumbnail/Poster/';
 
 const getRegions = async () => {
     const browser = await chromium.puppeteer.launch({
@@ -142,12 +142,13 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
             });
         });
         return movieItems.map((movieItem) => {
+            const imageNumber = movieItem.imageNumber.split('');
             return {
                 title: movieItem.title,
                 timeInfo: movieItem.timeInfo.reduce((acc, cur) => {
                     return [...acc, ...cur];
                 }, []),
-                image: `${CGV_GET_MOVIE_IMAGE}${movieItem.imageNumber}/${movieItem.imageNumber}_1000.jpg`
+                image: `${CGV_GET_MOVIE_IMAGE}0000${imageNumber[0]}${imageNumber[1]}/${movieItem.imageNumber}/${movieItem.imageNumber}_1000.jpg`
             };
         });
     } catch (error) {
