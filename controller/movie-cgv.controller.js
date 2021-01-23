@@ -1,5 +1,4 @@
-// const puppeteer = require('puppeteer');
-const chromium = require('chrome-aws-lambda');
+const { launchChromium } = require('../utils/chromium');
 
 const CGV_HOST_URL = 'http://www.cgv.co.kr';
 const CGV_GET_BY_REGION = 'http://www.cgv.co.kr/theaters/';
@@ -13,13 +12,8 @@ const MOCK_THEATER_INFO = {
 const CGV_GET_MOVIE_IMAGE = 'http://img.cgv.co.kr/Movie/Thumbnail/Poster/';
 
 const getRegions = async () => {
-    const browser = await chromium.puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
-    });
-    const page = await browser.newPage();
+    const { browser, page }  = await launchChromium();
+
     try {
         await page.goto(CGV_GET_BY_REGION);
         await page.waitFor(1000);
@@ -39,13 +33,7 @@ const getRegions = async () => {
 };
 
 const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
-    const browser = await chromium.puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
-    });
-    const page = await browser.newPage();
+    const { browser, page }  = await launchChromium();
 
     try {
         await page.goto(CGV_GET_BY_REGION);
@@ -73,13 +61,7 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
 };
 
 const getTimeTableUrl = async (link = MOCK_THEATER_INFO.link) => {
-    const browser = await chromium.puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
-    });
-    const page = await browser.newPage();
+    const { browser, page }  = await launchChromium();
 
     try {
         await page.goto(`${CGV_HOST_URL}${link}`);
@@ -100,13 +82,7 @@ const getTimeTableUrl = async (link = MOCK_THEATER_INFO.link) => {
 const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
     const timeTableUrl = await getTimeTableUrl(link);
 
-    const browser = await chromium.puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
-    });
-    const page = await browser.newPage();
+    const { browser, page }  = await launchChromium();
 
     try {
         await page.goto(`${CGV_HOST_URL}${timeTableUrl}`, {
@@ -159,13 +135,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
 };
 
 const getBoxOffice = async () => {
-  const browser = await chromium.puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath,
-    headless: chromium.headless,
-  })
-    const page = await browser.newPage();
+    const { browser, page }  = await launchChromium();
 
     try {
         await page.goto(CGV_BOX_OFFICES_URL);

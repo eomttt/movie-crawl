@@ -1,5 +1,5 @@
-// const puppeteer = require('puppeteer');
-const chromium = require('chrome-aws-lambda');
+const fetch = require("node-fetch");
+const { launchChromium } = require('../utils/chromium');
 
 const LOTTE_HOST_URL = 'https://www.lottecinema.co.kr/NLCHS';
 
@@ -12,13 +12,7 @@ const MOCK_THEATER_INFO = {
 const NAVER_LINK = 'https://search.naver.com/search.naver?';
 
 const getRegions = async () => {
-    const browser = await chromium.puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath,
-        headless: chromium.headless,
-    });
-    const page = await browser.newPage();
+    const { browser, page } = await launchChromium();
 
     try {
         await page.goto(LOTTE_HOST_URL);
@@ -39,13 +33,7 @@ const getRegions = async () => {
 };
 
 const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
-    const browser = await chromium.puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath,
-        headless: chromium.headless,
-    });
-    const page = await browser.newPage();
+    const { browser, page }  = await launchChromium();
 
     try {
         await page.goto(LOTTE_HOST_URL);
@@ -75,59 +63,33 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
 
 const getTimeTable = async (theaterName = MOCK_THEATER_INFO.title) => {
     return getTimeTableByNaver(theaterName);
-    // const browser = await chromium.puppeteer.launch({
-    //   args: [...chromium.args, '--proxy-server=https=175.213.132.56:8080'],
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: await chromium.executablePath,
-    //   headless: chromium.headless,
-    // });;
-    // const page = await browser.newPage();
-
-    // try {
-    //     console.log("AAAAA", link);
-    //     await page.goto(link, {
-    //         waitUntil: 'load',
-    //         // Remove the timeout
-    //         timeout: 0
-    //     });
-    //     console.log("BBBBB");
-    //     await page.waitFor(2000);
-
-    //     const movieItems = await page.evaluate(() => {
-    //         const items = Array.from(document.querySelectorAll('#contents > .tab_wrap > .active > .tab_con > .mCustomScrollbar > #mCSB_1 > #mCSB_1_container > .time_select_wrap'));
-    //         return items.map((item) => {
-    //             const title = item.querySelector('.list_tit > p').innerText;
-    //             const timeTables = Array.from(item.querySelectorAll('.list_time > li'));
-    //             const timeInfo = timeTables.map((timeTable) => {
-    //                 return {
-    //                     time: timeTable.querySelector('a > dl > .time > strong').innerText,
-    //                     seats: timeTable.querySelector('a > dl > .seat > strong').innerText,
-    //                     wholeSeats: timeTable.querySelector('a > dl > .seat').innerText.split('/')[1]
-    //                 };
-    //             });
-    //             return {
-    //                 title,
-    //                 timeInfo
-    //             };
-    //         });
-    //     });
-
-    //     return movieItems;
-    // } catch (error) {
-    //     console.log('Get theater timetable error LOTTE', error);
-    // } finally {
-    //     browser.close();
-    // }
 };
 
+const getImage = async (imageUrl) => {
+    const { browser, page }  = await launchChromium();
+
+    try {
+        await page.goto(imageUrl);
+        await page.waitFor(1000);
+
+        const images = await page.evaluate(() => {
+            const elements = Array.from(document.querySelectorAll('div > a > img'));
+            return elements.map((element) => {
+                return {
+                    image: element.getAttribute('src')
+                }
+            })
+        });
+        return images[0].image
+    } catch (error) {
+        console.log('Get lotter error', error);
+    } finally {
+        browser.close();
+    }
+}
+
 const getTimeTableByNaver = async (theaterName) => {
-    const browser = await chromium.puppeteer.launch({
-        args: [...chromium.args],
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath,
-        headless: chromium.headless,
-    });;
-    const page = await browser.newPage();
+    const { browser, page }  = await launchChromium();
 
     try {
         await page.goto(`${NAVER_LINK}query=${encodeURI(`롯데시네마+${theaterName}`)}`, {
@@ -152,12 +114,21 @@ const getTimeTableByNaver = async (theaterName) => {
                 });
                 return {
                     title,
-                    image: `https://movie.naver.com/movie/bi/mi/photoViewPopup.nhn?movieCode=${imageNumber}`,
+                    imageUrl: `https://movie.naver.com/movie/bi/mi/photoViewPopup.nhn?movieCode=${imageNumber}`,
                     timeInfo
                 };
             });
         });
-        return movieItems;
+        let timeTableData = [];
+        for (movieItem of movieItems) {
+            const item = {
+                title: movieItem.title,
+                timeInfo: movieItem.timeInfo,
+                image: await getImage(movieItem.imageUrl)
+            }
+            timeTableData.push(item);
+        }
+        return timeTableData;
     } catch (error) {
         console.log('Get theater timetable error LOTTE', error);
     } finally {

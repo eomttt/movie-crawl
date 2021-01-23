@@ -1,6 +1,5 @@
-// const puppeteer = require('puppeteer');
-const chromium = require('chrome-aws-lambda');
 const fetch = require("node-fetch");
+const { launchChromium } = require('../utils/chromium');
 
 const MEGA_HOST_URL = 'https://www.megabox.co.kr';
 const MEGA_GET_BY_REGION = 'https://www.megabox.co.kr/theater/list';
@@ -12,13 +11,8 @@ const MOCK_THEATER_INFO = {
 };
 
 const getRegions = async () => {
-    const browser = await chromium.puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath,
-        headless: chromium.headless,
-    });
-    const page = await browser.newPage();
+    const { browser, page }  = await launchChromium();
+
     try {
         await page.goto(MEGA_GET_BY_REGION);
         await page.waitFor(1000);
@@ -38,13 +32,7 @@ const getRegions = async () => {
 };
 
 const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
-    const browser = await chromium.puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath,
-        headless: chromium.headless,
-    });
-    const page = await browser.newPage();
+    const { browser, page }  = await launchChromium();
 
     try {
         await page.goto(MEGA_GET_BY_REGION);
@@ -98,13 +86,8 @@ const getImage = async (imageNumber) => {
 }
 
 const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
-    const browser = await chromium.puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath,
-        headless: chromium.headless,
-    });
-    const page = await browser.newPage();;
+    const { browser, page }  = await launchChromium();
+
     try {
         await page.goto(`${MEGA_HOST_URL}${link}`, {
             waitUntil: 'load',
