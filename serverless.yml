@@ -66,6 +66,7 @@ functions:
           path: movie-crawl
           method: get
           cors: true
+          timeout: 60 # seconds
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
