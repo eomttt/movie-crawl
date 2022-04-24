@@ -1,6 +1,6 @@
-const cgvController = require("./controller/movie-cgv.controller");
-const megaController = require("./controller/movie-megabox.controller");
-const lotteController = require("./controller/movie-lotte.controller");
+import cgvController from "./controller/movie-cgv.controller.js";
+import lotteController from "./controller/movie-lotte.controller.js";
+import megaController from "./controller/movie-megabox.controller.js";
 
 const MOVIE_TYPE = {
   MEGA: "megaBox",
@@ -38,7 +38,7 @@ const getBoxOffice = async () => {
   return result;
 };
 
-const handler = async (event) => {
+export const handler = async (event) => {
   let response = "";
 
   const { queryStringParameters } = event;
@@ -96,6 +96,4 @@ const _test = async () => {
   console.log("Result", result);
 };
 
-// _test();
-
-exports.handler = handler;
+_test();

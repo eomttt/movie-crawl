@@ -1,4 +1,4 @@
-const { launchChromium } = require("../utils/chromium");
+import { launchChromium } from "../utils/chromium.js";
 
 const CGV_HOST_URL = "http://www.cgv.co.kr";
 const CGV_GET_BY_REGION = "http://www.cgv.co.kr/theaters/";
@@ -193,8 +193,9 @@ const getBoxOffice = async () => {
   }
 };
 
-module.exports.getRegions = getRegions;
-module.exports.getTheatersByRegions = getTheatersByRegions;
-module.exports.getTimeTableUrl = getTimeTableUrl;
-module.exports.getTimeTable = getTimeTable;
-module.exports.getBoxOffice = getBoxOffice;
+export default {
+  getRegions,
+  getTheatersByRegions,
+  getTimeTable,
+  getBoxOffice,
+};

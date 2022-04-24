@@ -1,6 +1,6 @@
-const chromium = require('chrome-aws-lambda');
+import chromium from "chrome-aws-lambda";
 
-const launchChromium = async () => {
+export const launchChromium = async () => {
   const browser = await chromium.puppeteer.launch({
     args: chromium.args,
     defaultViewport: chromium.defaultViewport,
@@ -9,6 +9,4 @@ const launchChromium = async () => {
   });
   const page = await browser.newPage();
   return { browser, page };
-}
-
-module.exports.launchChromium = launchChromium;
+};
