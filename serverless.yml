@@ -1,6 +1,5 @@
 service: movie-crawler
 
-frameworkVersion: "2"
 provider:
   lambdaHashingVersion: 20201221
   name: aws
