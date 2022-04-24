@@ -98,8 +98,6 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
 
   const { browser, page } = await launchChromium();
 
-  console.log("CHECK", `${CGV_HOST_URL}${timeTableUrl}`);
-
   try {
     await page.goto(`${CGV_HOST_URL}${timeTableUrl}`, {
       waitUntil: "load",
