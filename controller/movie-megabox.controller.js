@@ -15,7 +15,7 @@ const getRegions = async () => {
 
   try {
     await page.goto(MEGA_GET_BY_REGION);
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
     const regions = await page.evaluate(() => {
       const elements = Array.from(
         document.querySelectorAll(
@@ -40,14 +40,14 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
 
   try {
     await page.goto(MEGA_GET_BY_REGION);
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
     // Click region
     await page.click(
       `.body-wrap > .container > #contents > .inner-wrap > .theater-box > .theater-place > ul > li:nth-child(${
         regionIndex + 1
       })`
     );
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
 
     const theatersInfo = await page.evaluate(() => {
       const elements = Array.from(
@@ -108,7 +108,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
       // Remove the timeout
       timeout: 0,
     });
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
 
     const movieItems = await page.evaluate(() => {
       const items = Array.from(

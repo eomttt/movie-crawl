@@ -15,7 +15,7 @@ const getRegions = async () => {
 
   try {
     await page.goto(LOTTE_HOST_URL);
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
     const regions = await page.evaluate(() => {
       const elements = Array.from(
         document.querySelectorAll(
@@ -40,16 +40,16 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
 
   try {
     await page.goto(LOTTE_HOST_URL);
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
     // Click region
     await page.click("#header_section > #nav > ul > li:nth-child(3)");
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
     await page.click(
       `#header_section > #nav > ul > li:nth-child(3) > div > ul > li:nth-child(${
         regionIndex + 2
       })`
     );
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
 
     const theatersInfo = await page.evaluate(() => {
       const elements = Array.from(
@@ -81,7 +81,7 @@ const getImage = async (imageUrl) => {
 
   try {
     await page.goto(imageUrl);
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
 
     const images = await page.evaluate(() => {
       const elements = Array.from(document.querySelectorAll("div > a > img"));
@@ -111,7 +111,7 @@ const getTimeTableByNaver = async (theaterName) => {
         timeout: 0,
       }
     );
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
 
     const movieItems = await page.evaluate(() => {
       const items = Array.from(

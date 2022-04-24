@@ -16,7 +16,7 @@ const getRegions = async () => {
 
   try {
     await page.goto(CGV_GET_BY_REGION);
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
     const regions = await page.evaluate(() => {
       const elements = Array.from(
         document.querySelectorAll(
@@ -41,14 +41,14 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
 
   try {
     await page.goto(CGV_GET_BY_REGION);
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
     // Click region
     await page.click(
       `#cgvwrap > #contaniner > #contents > .sect-common > .favorite-wrap > .sect-city > ul > li:nth-child(${
         regionIndex + 1
       })`
     );
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
 
     const theatersInfo = await page.evaluate(() => {
       const elements = Array.from(
@@ -77,7 +77,7 @@ const getTimeTableUrl = async (link = MOCK_THEATER_INFO.link) => {
 
   try {
     await page.goto(`${CGV_HOST_URL}${link}`);
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
     const iframeUrl = await page.evaluate(() => {
       const iframe = document.querySelector(
         "#cgvwrap > #contaniner > #contents > .wrap-theater > .cols-content > .col-detail > iframe"
@@ -106,7 +106,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
       // Remove the timeout
       timeout: 0,
     });
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
 
     const movieItems = await page.evaluate(() => {
       const items = Array.from(document.querySelectorAll("li > .col-times"));
@@ -161,7 +161,7 @@ const getBoxOffice = async () => {
 
   try {
     await page.goto(CGV_BOX_OFFICES_URL);
-    await page.waitFor(1000);
+    await page.waitForTimeout(1000);
 
     const boxOffices = await page.evaluate(() => {
       const elements = Array.from(
