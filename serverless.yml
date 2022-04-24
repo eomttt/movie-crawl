@@ -61,14 +61,11 @@ provider:
 functions:
   handler:
     handler: index.handler
-#    The following are a few example events you can configure
-#    NOTE: Please make sure to change your handler code to work with those events
-#    Check the event documentation for details
-      events:
-        - http:
-            path: movie-crawl
-            method: get
-            cors: true
+    events:
+      - http:
+          path: movie-crawl
+          method: get
+          cors: true
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
