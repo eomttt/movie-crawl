@@ -1,35 +1,35 @@
-const cgvController = require('./controller/movie-cgv.controller');
-const megaController = require('./controller/movie-megabox.controller');
-const lotteController = require('./controller/movie-lotte.controller');
+const cgvController = require("./controller/movie-cgv.controller");
+const megaController = require("./controller/movie-megabox.controller");
+const lotteController = require("./controller/movie-lotte.controller");
 
 const MOVIE_TYPE = {
-    MEGA: 'megaBox',
-    CGV: 'cgv',
-    LOTTE: 'lotte'
+  MEGA: "megaBox",
+  CGV: "cgv",
+  LOTTE: "lotte",
 };
 
 const CONTROLLER = {
-    [MOVIE_TYPE.MEGA]: megaController,
-    [MOVIE_TYPE.CGV]: cgvController,
-    [MOVIE_TYPE.LOTTE]: lotteController
+  [MOVIE_TYPE.MEGA]: megaController,
+  [MOVIE_TYPE.CGV]: cgvController,
+  [MOVIE_TYPE.LOTTE]: lotteController,
 };
 
 const getRegion = async (type) => {
-    const result = await CONTROLLER[type].getRegions();
+  const result = await CONTROLLER[type].getRegions();
 
-    return result;
+  return result;
 };
 
 const getTheatersByRegion = async (type, regionIndex) => {
-    const result = await CONTROLLER[type].getTheatersByRegions(regionIndex);
+  const result = await CONTROLLER[type].getTheatersByRegions(regionIndex);
 
-    return result;
+  return result;
 };
 
 const getTimeTable = async (type, theaterLink) => {
-    const result = await CONTROLLER[type].getTimeTable(theaterLink);
+  const result = await CONTROLLER[type].getTimeTable(theaterLink);
 
-    return result;
+  return result;
 };
 
 const getBoxOffice = async () => {
@@ -39,39 +39,37 @@ const getBoxOffice = async () => {
 };
 
 const handler = async (event) => {
-  let response = '';
-  
+  let response = "";
+
   const { queryStringParameters } = event;
 
   try {
     if (queryStringParameters) {
       const { request, theater } = queryStringParameters;
-      console.log(theater);
-      console.log(request);
-      switch(request) {
-        case 'region': {
+      switch (request) {
+        case "region": {
           response = await getRegion(theater);
           break;
         }
-        case 'theaters': {
+        case "theaters": {
           const { regionIndex } = queryStringParameters;
           response = await getTheatersByRegion(theater, Number(regionIndex));
           break;
         }
-        case 'timetable': {
+        case "timetable": {
           const { theaterLink } = queryStringParameters;
           console.log(theaterLink);
           response = await getTimeTable(theater, theaterLink);
           break;
         }
-        case 'box-office': {
+        case "box-office": {
           const { theaterLink } = queryStringParameters;
-          response = await getBoxOffice(theater); 
+          response = await getBoxOffice(theater);
           break;
         }
         default: {
-          console.log('Please input correct request', request);
-          response = 'Please input correct request';
+          console.log("Please input correct request", request);
+          response = "Please input correct request";
           break;
         }
       }
@@ -79,23 +77,23 @@ const handler = async (event) => {
 
     return {
       statusCode: 200,
-      headers: {'Access-Control-Allow-Origin': '*'},
-      body: JSON.stringify(response)
+      headers: { "Access-Control-Allow-Origin": "*" },
+      body: JSON.stringify(response),
     };
   } catch (error) {
-    console.log('Error' + error);
+    console.log("Error" + error);
   }
 };
 
 const _test = async () => {
   const result = await handler({
     queryStringParameters: {
-      request: 'timetable',
-      theater: 'lotte',
-      theaterLink: '광명(광명사거리)'
-    }
+      request: "timetable",
+      theater: "lotte",
+      theaterLink: "광명(광명사거리)",
+    },
   });
-  console.log('Result', result);
+  console.log("Result", result);
 };
 
 // _test();
