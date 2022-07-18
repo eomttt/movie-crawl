@@ -58,7 +58,6 @@ export const handler = async (event) => {
         }
         case "timetable": {
           const { theaterLink } = queryStringParameters;
-          console.log(theaterLink);
           response = await getTimeTable(theater, theaterLink);
           break;
         }
@@ -89,8 +88,8 @@ const _test = async () => {
   const result = await handler({
     queryStringParameters: {
       request: "timetable",
-      theater: "cgv",
-      theaterLink: "/theaters/?areacode=01&theaterCode=0056&date=20200426",
+      theater: "megaBox",
+      theaterLink: "/theater/time?brchNo=2171",
     },
   });
   console.log("Result", result);

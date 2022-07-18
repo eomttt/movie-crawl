@@ -157,7 +157,8 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
       });
     });
     let timeTableData = [];
-    for (movieItem of movieItems) {
+    console.log("movieItems", movieItems);
+    for (let movieItem of movieItems) {
       const item = {
         title: movieItem.title,
         timeInfo: movieItem.timeInfo.reduce((acc, cur) => {
