@@ -6,7 +6,8 @@
   "type": "module",
   "dependencies": {
     "chrome-aws-lambda": "10.1.0",
-    "node-fetch": "3.2.3"
+    "node-fetch": "3.2.3",
+    "puppeteer-core": "^10.4.0"
   },
   "scripts": {
     "start": "node index.js",
