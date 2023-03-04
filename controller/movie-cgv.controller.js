@@ -106,9 +106,7 @@ async function renderPageToHtml(page) {
     const context = await frame.executionContext();
     const res = await context.evaluate(() => {
       const el = document.querySelector("*");
-      if (el) {
-        return el.outerHTML;
-      }
+      return el?.outerHTML ?? '';
     });
     if (res) {
       await iframe.evaluate((a, res) => {
