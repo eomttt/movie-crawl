@@ -72,41 +72,44 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
   }
 };
 
-const getTimeTableUrl = async (link = MOCK_THEATER_INFO.link) => {
-  const { browser, page } = await launchChromium();
+/**
+ * @depreacted CGV에서 iframe url 로 따로 접근을 허용해주지 않아서 불필요해짐
+ */
+// const getTimeTableUrl = async (link = MOCK_THEATER_INFO.link) => {
+//   const { browser, page } = await launchChromium();
 
-  try {
-    await page.goto(`${CGV_HOST_URL}${link}`);
-    await page.waitForTimeout(1000);
-    const iframeUrl = await page.evaluate(() => {
-      const iframe = document.querySelector(
-        "#cgvwrap > #contaniner > #contents > .wrap-theater > .cols-content > .col-detail > iframe"
-      );
-      return iframe.getAttribute("src");
-    });
+//   try {
+//     await page.goto(`${CGV_HOST_URL}${link}`);
+//     await page.waitForTimeout(1000);
+//     const iframeUrl = await page.evaluate(() => {
+//       const iframe = document.querySelector(
+//         "#cgvwrap > #contaniner > #contents > .wrap-theater > .cols-content > .col-detail > iframe"
+//       );
+//       return iframe.getAttribute("src");
+//     });
 
-    return iframeUrl;
-  } catch (error) {
-    console.log("Get time table url error", error);
-  } finally {
-    browser.close();
-  }
-};
+//     console.log("###iframeUrl", iframeUrl)
+
+//     return iframeUrl;
+//   } catch (error) {
+//     console.log("Get time table url error", error);
+//   } finally {
+//     browser.close();
+//   }
+// };
 
 const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
-  const timeTableUrl = await getTimeTableUrl(link);
-
   const { browser, page } = await launchChromium();
 
   try {
-    await page.goto(`${CGV_HOST_URL}${timeTableUrl}`, {
+    await page.goto(`${CGV_HOST_URL}${link}`, {
       waitUntil: "load",
       // Remove the timeout
       timeout: 0,
     });
     await page.waitForTimeout(1000);
-
-    const movieItems = await page.evaluate(() => {
+    const frame = await page.frames().find(f => f.name() === 'ifrm_movie_time_table');
+    const movieItems = await frame.waitForFunction(() => {
       const items = Array.from(document.querySelectorAll("li > .col-times"));
       return items.map((item) => {
         const title = item.querySelector(".info-movie > a > strong").innerText;
@@ -137,7 +140,9 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
         };
       });
     });
-    return movieItems.map((movieItem) => {
+
+    const movieItemsJson = await movieItems.jsonValue();
+    return movieItemsJson.map((movieItem) => {
       const imageNumber = movieItem.imageNumber.split("");
       return {
         title: movieItem.title,
