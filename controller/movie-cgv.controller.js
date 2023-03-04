@@ -130,7 +130,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
     await page.waitForTimeout(1000);
 
     const htmlString = await renderPageToHtml(page);
-    const replacedHtmlString = htmlString.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('iframe', 'div');
+    const replacedHtmlString = htmlString.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/iframe/g, 'div');
 
     await page.setContent(replacedHtmlString);
     await page.waitForTimeout(1000);

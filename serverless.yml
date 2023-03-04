@@ -15,7 +15,7 @@ service: moviecrawler
 
 provider:
   name: aws
-  runtime: nodejs16.x
+  runtime: nodejs14.x
   # you can overwrite defaults here
   stage: dev
   region: ap-northeast-2
