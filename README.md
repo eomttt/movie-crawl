@@ -6,11 +6,7 @@
 
 ## Test
 
-- Open index.js
-- Find `_test()`
-- Delete command out
-  > // \_test() => \_test()
-- > npm start
+- > npm test
 - Change `request, theater, theaterLink` in `_test` function and play!
 
 ### TimeTable test 인 경우
@@ -26,7 +22,7 @@
 }
 ```
 
-- [theaterLink는 이부분 참조](https://github.com/eomttt/movie-king/tree/develop/src/lib/datum/theaters)
+- [theaterLink는 이부분 참조](https://github.com/eomttt/movie-king/tree/master/src/lib/datum/theaters)
 
 ## Movie crawling for use in AWS Lambda
 

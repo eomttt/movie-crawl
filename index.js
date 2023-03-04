@@ -83,16 +83,3 @@ export const handler = async (event) => {
     console.log("Error" + error);
   }
 };
-
-const _test = async () => {
-  const result = await handler({
-    queryStringParameters: {
-      request: "timetable",
-      theater: "megaBox",
-      theaterLink: "/theater/time?brchNo=2171",
-    },
-  });
-  console.log("Result", result);
-};
-
-// _test();
