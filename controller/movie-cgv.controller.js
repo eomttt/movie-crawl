@@ -108,8 +108,8 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
       timeout: 0,
     });
     await page.waitForTimeout(1000);
-    const frame = await page.frames().find(f => f.name() === 'ifrm_movie_time_table');
-    console.log('###frame', frame)
+    const elementHandle = await page.$("#cgvwrap > #contaniner > #contents > .wrap-theater > .cols-content > .col-detail > iframe");
+    const frame = await elementHandle.contentFrame();
     const movieItems = await frame.waitForFunction(() => {
       const items = Array.from(document.querySelectorAll("li > .col-times"));
       return items.map((item) => {
