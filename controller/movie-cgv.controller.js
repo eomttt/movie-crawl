@@ -143,7 +143,6 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
     });
 
     const movieItemsJson = await movieItems.jsonValue();
-    console.log("### movieItemsJson", movieItemsJson)
     return movieItemsJson.map((movieItem) => {
       const imageNumber = movieItem.imageNumber.split("");
       return {
