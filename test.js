@@ -5,7 +5,7 @@ import {handler} from './index.js';
     queryStringParameters: {
       request: "timetable",
       theater: "cgv",
-      theaterLink: "/theaters/?theaterCode=0056",
+      theaterLink: "/theaters/?theaterCode=0304&date=20230304",
     },
   });
   console.log("Result", result);
