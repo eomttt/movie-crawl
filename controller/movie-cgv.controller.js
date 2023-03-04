@@ -98,6 +98,28 @@ const getTheatersByRegions = async (regionIndex = GANGWON_INDEX) => {
 //   }
 // };
 
+async function renderPageToHtml(page) {
+  const iframes = await page.$$("iframe");
+  for (const iframe of iframes) {
+    const frame = await iframe.contentFrame();
+    if (!frame) continue;
+    const context = await frame.executionContext();
+    const res = await context.evaluate(() => {
+      const el = document.querySelector("*");
+      if (el) {
+        return el.outerHTML;
+      }
+    });
+    if (res) {
+      await iframe.evaluate((a, res) => {
+        a.innerHTML = res;
+      }, res);
+    }
+  }
+
+  return await page.evaluate(() => new XMLSerializer().serializeToString(document));
+}
+
 const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
   const { browser, page } = await launchChromium();
 
@@ -108,13 +130,19 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
       timeout: 0,
     });
     await page.waitForTimeout(1000);
-    const elementHandle = await page.$("#cgvwrap > #contaniner > #contents > .wrap-theater > .cols-content > .col-detail > iframe");
-    const frame = await elementHandle.contentFrame();
-    const movieItems = await frame.waitForFunction(() => {
-      const items = Array.from(document.querySelectorAll("li > .col-times"));
+
+    const htmlString = await renderPageToHtml(page);
+    const replacedHtmlString = htmlString.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('iframe', 'div');
+
+    await page.setContent(replacedHtmlString);
+    await page.waitForTimeout(1000);
+    const movieItems = await page.evaluate(() => {
+      const items = Array.from(document.querySelectorAll('.sect-showtimes > ul > li > .col-times'));
       return items.map((item) => {
         const title = item.querySelector(".info-movie > a > strong").innerText;
+        console.log('item.querySelector(".info-movie > a > strong")', item.querySelector(".info-movie > a > strong"))
         const timeTables = Array.from(item.querySelectorAll(".type-hall"));
+  
         const timeInfo = timeTables.map((timeTable) => {
           const wholeSeats = timeTable.querySelector(
             ".info-hall > ul > li:nth-child(3)"
@@ -130,6 +158,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
             };
           });
         });
+  
         const imageHref = item
           .querySelector(".info-movie > a")
           .getAttribute("href");
@@ -140,10 +169,12 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
           imageNumber,
         };
       });
-    });
+    })
 
-    const movieItemsJson = await movieItems.jsonValue();
-    return movieItemsJson.map((movieItem) => {
+    // const dom = new JSDOM(replacedHtmlString);
+
+
+    return movieItems.map((movieItem) => {
       const imageNumber = movieItem.imageNumber.split("");
       return {
         title: movieItem.title,
