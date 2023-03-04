@@ -3,9 +3,9 @@ import {handler} from './index.js';
 (async () => {
   const result = await handler({
     queryStringParameters: {
-      request: "timetable",
-      theater: "cgv",
-      theaterLink: "/theaters/?theaterCode=0304&date=20230304",
+    "request": "timetable",
+    "theater": "cgv",
+    "theaterLink": "/theaters/?areacode=01&theaterCode=0056"
     },
   });
   console.log("Result", result);

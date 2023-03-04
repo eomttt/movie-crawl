@@ -109,6 +109,7 @@ const getTimeTable = async (link = MOCK_THEATER_INFO.link) => {
     });
     await page.waitForTimeout(1000);
     const frame = await page.frames().find(f => f.name() === 'ifrm_movie_time_table');
+    console.log('###frame', frame)
     const movieItems = await frame.waitForFunction(() => {
       const items = Array.from(document.querySelectorAll("li > .col-times"));
       return items.map((item) => {
